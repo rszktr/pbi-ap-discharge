@@ -13,7 +13,6 @@ pdf(dataBuffer).then(function (data) {
     let regexFooter = /e-MedSolution[\s\S]*?(\d{4}\.\d{2}\.\d{2} \d{2}:\d{2})/gm;
     let cleanText = data.text.replace(regexFooter, "");
 
-
     // RegExps
     const regexTubeFeeding = / NG| NJ|szond|Szond/gm;
     const regexSolidFeeding = /melléeh|hozzátá|per os| ehet|eszik|etetés|szilárd/gm;

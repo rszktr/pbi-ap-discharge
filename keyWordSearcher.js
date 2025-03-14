@@ -1,17 +1,13 @@
-const fs = require('fs');
-const pdf = require('pdf-parse');
-const path = require('path'); // Import the path module for better path handling
+let cleanUpText = (dataBuffer) => {
+    let regexFooter = /e-MedSolution[\s\S]*?(\d{4}\.\d{2}\.\d{2} \d{2}:\d{2})/gm;
+    return dataBuffer.text.replace(regexFooter, "");
+}
 
-let dataBuffer = fs.readFileSync(`./discharge_papers/7c799b38-534f-4abb-9607-78206e23697d.pdf`);
 
-pdf(dataBuffer).then(function (data) {
-    const outputFilePath = path.join(__dirname, 'output.txt'); // Define output path
+let keyWordSearcher = (cleanText) => {
 
     let searchResults = []
 
-    //Clean text
-    let regexFooter = /e-MedSolution[\s\S]*?(\d{4}\.\d{2}\.\d{2} \d{2}:\d{2})/gm;
-    let cleanText = data.text.replace(regexFooter, "");
 
     // RegExps
     const regexTubeFeeding = / NG| NJ|szond|Szond/gm;
@@ -44,7 +40,7 @@ pdf(dataBuffer).then(function (data) {
         { name: "Cholecystectomia, LC", regex: regexLC },
     ]
 
-    // Functiom
+    // Function
     function findMatchInContext(text, regex) {
         const matches = [];
         let match;
@@ -77,7 +73,7 @@ pdf(dataBuffer).then(function (data) {
     // Operation
     regexArray.forEach(item => {
         const contexts = findMatchInContext(cleanText, item.regex);
-        
+
         resultObject = {
             name: item.name,
             regex: item.regex.source,
@@ -90,19 +86,10 @@ pdf(dataBuffer).then(function (data) {
         contexts.length > 0 ? console.log(contexts) : console.log("No match")
     })
 
-    console.log(searchResults)
+}
 
-// 
-    const textToWrite = `
-    Number of pages: ${data.numpages}
-${ JSON.stringify(searchResults, null, 2)}
-        `;
 
-    fs.writeFile(outputFilePath, textToWrite, (err) => {
-        if (err) {
-            console.error("Error writing to file:", err);
-        } else {
-            console.log("Data written to output.txt successfully!");
-        }
-    });
-});
+module.exports = {
+    keyWordSearcher: keyWordSearcher,
+    cleanUpText: cleanUpText
+}

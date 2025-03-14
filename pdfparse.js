@@ -2,7 +2,7 @@ const fs = require('fs');
 const pdf = require('pdf-parse');
 const path = require('path'); // Import the path module for better path handling
 
-let dataBuffer = fs.readFileSync(`./discharge_papers/7c799b38-534f-4abb-9607-78206e23697d.pdf`);
+let dataBuffer = fs.readFileSync(`./discharge_papers/szd001.pdf`);
 
 pdf(dataBuffer).then(function (data) {
 
@@ -90,3 +90,7 @@ PDF Text: ${data.text}
         }
     })
 });
+
+module.exports = {
+    keyWordSearcher: keyWordSearcher
+}
